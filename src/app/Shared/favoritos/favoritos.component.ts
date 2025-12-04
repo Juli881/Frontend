@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Producto } from '../model/producto.model';
-import { FavoritosService } from '../servicios/favoritos.service';
+import { Producto } from '../../model/producto.model';
+import { FavoritosService } from '../../servicios/favoritos.service';
 import { CommonModule } from '@angular/common';  
 
 @Component({

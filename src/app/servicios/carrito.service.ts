@@ -1,61 +1,101 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Producto } from '../model/producto.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarritoService {
-  private carritoSubject = new BehaviorSubject<{ producto: Producto; cantidad: number }[]>([]);
-  carrito$ = this.carritoSubject.asObservable()
 
-  agregarAlcarrito(producto: Producto) {
+  private carritoSubject = new BehaviorSubject<{ producto: Producto; cantidad: number }[]>([]);
+  carrito$ = this.carritoSubject.asObservable();
+
+  private apiUrl = 'http://localhost:3000/carrito'; // Ajusta según tu backend
+
+  constructor(private http: HttpClient) {
+    this.cargarCarritoLocal();
+  }
+
+  // -----------------------
+  // LOCAL STORAGE
+  // -----------------------
+  private cargarCarritoLocal() {
+    const data = localStorage.getItem('carrito');
+    const carrito = data ? JSON.parse(data) : [];
+    this.carritoSubject.next(carrito);
+  }
+
+  private guardarCarritoLocal() {
+    localStorage.setItem('carrito', JSON.stringify(this.carritoSubject.getValue()));
+  }
+
+  // -----------------------
+  // AGREGAR PRODUCTO
+  // -----------------------
+  agregarAlcarrito(producto: Producto, usuarioId?: number) {
     const productos = this.carritoSubject.getValue();
-    const encontrado = productos.find(p => p.producto.id === producto.id)
+    const encontrado = productos.find(p => p.producto.id === producto.id);
 
     if (encontrado) {
-      encontrado.cantidad++
+      encontrado.cantidad++;
     } else {
-      this.carritoSubject.next([...productos, { producto, cantidad: 1 }])
+      productos.push({ producto, cantidad: 1 });
+    }
 
+    this.carritoSubject.next([...productos]);
+    this.guardarCarritoLocal();
+
+    // Si hay usuario logueado, enviar al backend
+    if (usuarioId) {
+      this.http.post(`${this.apiUrl}/agregar`, { usuarioId, productoId: producto.id }).subscribe();
     }
   }
 
-  eliminarDelCarrito(productoId: number) {
-    const productos = this.carritoSubject.getValue().filter(p => p.producto.id !== productoId)
-    this.carritoSubject.next(productos)
-  }
-  vaciarCarrito() {
-    this.carritoSubject.next([])
-  }
-//Borra todos los productos del carrito y emite un arreglo vacío.
+  // -----------------------
+  // ELIMINAR PRODUCTO
+  // -----------------------
+  eliminarDelCarrito(productoId: number, usuarioId?: number) {
+    const productos = this.carritoSubject.getValue().filter(p => p.producto.id !== productoId);
+    this.carritoSubject.next(productos);
+    this.guardarCarritoLocal();
 
-
-  //Metodo para actualizar la cantidad de un producto en el carrito 
-  actualizarCantidad(productoId: number, nuevaCantidad: number) {
-    // Recorremos el carrito y actualizamos la cantidad del producto con el ID dado
-    const productos = this.carritoSubject.getValue().map(item => {
-      if (item.producto.id === productoId) {
-        // Busca el producto por ID y actualiza su cantidad
-        return { ...item, cantidad: nuevaCantidad }
-      }
-      // Cambia la cantidad de ese producto por la nueva cantidad que le indicaste.
-      //
-      return item // Si no es el producto buscado, lo deja como esta
-    })
-    // Emitimos el nuevo estado del carrito (BehaviorSubject)
-    this.carritoSubject.next(productos)
+    if (usuarioId) {
+      this.http.delete(`${this.apiUrl}/eliminar/${usuarioId}/${productoId}`).subscribe();
+    }
   }
 
-  // Metodo para obtener los productos del carrito como un arreglo
+  // -----------------------
+  // VACIAR CARRITO
+  // -----------------------
+  vaciarCarrito(usuarioId?: number) {
+    this.carritoSubject.next([]);
+    this.guardarCarritoLocal();
+
+    if (usuarioId) {
+      this.http.delete(`${this.apiUrl}/vaciar/${usuarioId}`).subscribe();
+    }
+  }
+
+  // -----------------------
+  // OBTENER PRODUCTOS
+  // -----------------------
   obtenerProductos(): { producto: Producto; cantidad: number }[] {
     return this.carritoSubject.getValue();
   }
 
-  // Metodo para calcular el total a pagar (precio * cantidad de cada producto)
+  // -----------------------
+  // TOTAL
+  // -----------------------
   obtenerTotal(): number {
-    const productos = this.carritoSubject.getValue();
-    // Usamos reduce para sumar los subtotales de cada producto
-    return productos.reduce((total, item) => total + item.producto.precio * item.cantidad, 0)
+    return this.carritoSubject.getValue().reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
+  }
+
+  // -----------------------
+  // CARGAR CARRITO DESDE BACKEND
+  // -----------------------
+  cargarCarritoBackend(usuarioId: number): Observable<any> {
+    if (!usuarioId) return of([]);
+    return this.http.get<any>(`${this.apiUrl}/usuario/${usuarioId}`);
   }
 }

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Producto } from '../model/producto.model';
-import { CarritoService } from '../servicios/carrito.service';
+import { Producto } from '../../model/producto.model';
+import { CarritoService } from '../../servicios/carrito.service';
 
 import { Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   standalone : true,
   imports: [CommonModule,FormsModule],
   templateUrl: './carrito.component.html',
-  styleUrl: './carrito.component.css'
+  styleUrls: ['./carrito.component.css']
 })
 export class CarritoComponent implements OnInit{
   productosEnCarrito: {producto: Producto; cantidad : number}[] = []

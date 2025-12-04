@@ -1,0 +1,14 @@
+<h2>Historial de Compras</h2>
+
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="compras.length === 0 && !error">
+  <p>No has realizado compras aún.</p>
+</div>
+
+<ul *ngIf="compras.length > 0">
+  <li *ngFor="let compra of compras">
+    Compra #{{ compra.id }} - Total: ${{ compra.total }} - {{ compra.fecha }}
+    <button (click)="verTicket(compra.id)">Ver Ticket</button>
+  </li>
+</ul>

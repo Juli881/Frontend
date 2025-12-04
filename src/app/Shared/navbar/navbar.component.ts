@@ -3,52 +3,58 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { Producto } from '../../model/producto.model';
 import { CarritoService } from '../../servicios/carrito.service';
-import { UsuarioComponent } from '../../usuario/usuario.component';
-import { UsuarioService } from '../../servicios/usuario.service'; // ⬅️ IMPORTANTE
+import { UsuarioService } from '../../servicios/usuario.service';
+import { UsuarioComponent } from '../usuario/usuario.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule, RouterModule, UsuarioComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterModule,
+    UsuarioComponent   // ⬅️ Ahora sí, existente y correcto
+  ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  cantidadProductos: number = 0;
-  nombreUsuario: string = 'Usuario';
 
-  // ⬅️ Agregá el servicio al constructor
+  cantidadProductos: number = 0;
+  nombreUsuario: string = 'Invitado';
+
   constructor(
-    private carritoservice: CarritoService,
-    private usuarioService: UsuarioService // ⬅️ Agregado
+    private carritoService: CarritoService,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
-    // Carrito
-    this.carritoservice.carrito$.subscribe((productos: { producto: Producto, cantidad: number }[]) => {
-      this.cantidadProductos = productos.reduce((total, item) => total + item.cantidad, 0);
+
+
+    this.carritoService.carrito$.subscribe((productos: { producto: Producto, cantidad: number }[]) => {
+      this.cantidadProductos = productos.reduce(
+        (total, item) => total + item.cantidad, 0
+      );
     });
 
-    
+    // 👤 Nombre del usuario
     this.usuarioService.nombreUsuario$.subscribe(nombre => {
       this.nombreUsuario = nombre;
     });
   }
 
-  onCarritoClick() {
-    console.log('carrito clicked');
-  }
-
   cambiarFondo() {
-    let toggle: HTMLInputElement | null = document.getElementById('toggle') as HTMLInputElement;
-    let label_toggle: HTMLInputElement | null = document.getElementById('label_toggle') as HTMLInputElement;
+    let toggle = document.getElementById('toggle') as HTMLInputElement | null;
+    let label_toggle = document.getElementById('label_toggle') as HTMLInputElement | null;
+
     if (toggle) {
-      let checked: boolean = toggle.checked;
+      let checked = toggle.checked;
       document.body.classList.toggle('dark-mode', checked);
-      if (checked) {
-        label_toggle!.innerHTML = '<i class = "fa-solid fa-sun"></i>';
-      } else {
-        label_toggle!.innerHTML = '<i class = "fa-regular fa-moon"></i>';
+
+      if (label_toggle) {
+        label_toggle.innerHTML = checked
+          ? '<i class="fa-solid fa-sun"></i>'
+          : '<i class="fa-regular fa-moon"></i>';
       }
     }
   }

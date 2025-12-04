@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Producto } from '../model/producto.model';
-import { CarritoService } from '../servicios/carrito.service';
-import { FavoritosService } from '../servicios/favoritos.service';
+import { Producto } from '../../model/producto.model';
+import { CarritoService } from '../../servicios/carrito.service';
+import { FavoritosService } from '../../servicios/favoritos.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -167,20 +167,20 @@ export class ProductosComponent {
     nombre: 'Disintegration (Vinilo) [Importado]',
     descripcion: 'The Cure.',
     precio: 4500,
-    imagen: 'assets/disintegration.jpg',
+    imagen: 'assets/Disintegration.jpg',
     disponibilidad: true,
     categoria: 'Vinilos',
     marca: 'Apple Records'
   },
   {
     id: 202,
-    nombre: 'Vinilo Pink Floyd - The Dark Side of the Moon',
-    descripcion: 'Vinilo edición limitada, alta fidelidad y packaging especial.',
+    nombre: 'Paranoid (Vinilo)',
+    descripcion: 'Vinilo edición limitada, por Black Sabbath.',
     precio: 6000,
-    imagen: 'assets/vinilo2.png',
+    imagen: 'assets/Paranoid.jpg',
     disponibilidad: true,
     categoria: 'Vinilos',
-    marca: 'Harvest'
+    marca: 'Apple Records'
   }
 
 ];

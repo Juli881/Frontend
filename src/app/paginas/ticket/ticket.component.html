@@ -1,0 +1,33 @@
+<div class="ticket-container" *ngIf="!cargando && ticket; else cargandoTpl">
+
+  <h2 class="titulo">Ticket de compra</h2>
+
+  <div class="ticket-info">
+    <p><strong>ID:</strong> {{ ticket.id }}</p>
+    <p><strong>Fecha:</strong> {{ ticket.fecha }}</p>
+    <p><strong>Usuario:</strong> {{ ticket.usuario }}</p>
+  </div>
+
+  <h3 class="subtitulo">Productos</h3>
+
+  <div class="productos">
+    <div class="producto" *ngFor="let item of ticket.productos">
+      <p>
+        <strong>{{ item.producto.nombre }}</strong>  
+        (x{{ item.cantidad }})
+      </p>
+      <p class="precio">$ {{ item.producto.precio }}</p>
+    </div>
+  </div>
+
+  <div class="total">
+    <strong>Total:</strong> $ {{ ticket.total }}
+  </div>
+
+  <button class="btn-pdf" (click)="descargarPDF()">Descargar PDF</button>
+
+</div>
+
+<ng-template #cargandoTpl>
+  <p class="cargando">Cargando ticket...</p>
+</ng-template>

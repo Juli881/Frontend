@@ -1,0 +1,63 @@
+.ticket-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #1a1a1a;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+.titulo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.ticket-info p {
+  margin: 3px 0;
+}
+
+.subtitulo {
+  margin-top: 20px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 5px;
+}
+
+.productos {
+  margin-top: 10px;
+}
+
+.producto {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #333;
+}
+
+.total {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: right;
+}
+
+.btn-pdf {
+  width: 100%;
+  margin-top: 30px;
+  background: #ff3333;
+  border: none;
+  padding: 12px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-pdf:hover {
+  background: #cc0000;
+}
+
+.cargando {
+  text-align: center;
+  color: white;
+  margin-top: 50px;
+}
