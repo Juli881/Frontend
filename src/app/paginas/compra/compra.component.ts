@@ -29,12 +29,19 @@ export class CompraComponent implements OnInit {
   }
 
   cargarCarrito(): void {
-    // Obtenemos productos desde CarritoService
-    this.carrito = this.carritoService.obtenerProductos();
-    this.total = this.carritoService.obtenerTotal();
-    if(this.carrito.length === 0) {
-      this.error = 'El carrito está vacío.';
-    }
+    const usuarioId = this.authService.obtenerUsuarioId();
+    this.carritoService.cargarCarritoBackend(usuarioId).subscribe({
+      next: (res) => {
+        this.carrito = res;
+        this.total = this.carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
+        if (this.carrito.length === 0) {
+          this.error = 'El carrito está vacío.';
+        }
+      },
+      error: () => {
+        this.error = 'No se pudo cargar el carrito.';
+      }
+    });
   }
 
   finalizarCompra(): void {
@@ -50,12 +57,10 @@ export class CompraComponent implements OnInit {
       productos: this.carrito,
       total: this.total,
       direccion: this.direccion,
-      metodoPago: 'efectivo' // por ejemplo
+      metodoPago: 'efectivo'
     }).subscribe({
       next: (res: any) => {
-        // Vaciar carrito local
-        this.carritoService.vaciarCarrito();
-        // Redirigir a ticket
+        this.carritoService.vaciarCarrito(usuarioId);
         this.router.navigate(['/ticket', res.id_compra]);
       },
       error: () => {
