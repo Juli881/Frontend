@@ -5,6 +5,7 @@ import { InicioComponent } from './paginas/inicio/inicio.component';
 import { ContactoComponent } from './paginas/contacto/contacto.component';
 import { ProductosComponent } from './paginas/productos/productos.component';
 import { CompraComponent } from './paginas/compra/compra.component';
+import { ComprasComponent } from './paginas/compras/compras.component'; // ← NUEVO IMPORT
 
 // SHARED
 import { CarritoComponent } from './Shared/carrito/carrito.component';
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'favoritos', component: FavoritosComponent },
 
   { path: 'compra', component: CompraComponent },
+  { path: 'mis-compras', component: ComprasComponent }, // ← NUEVA RUTA
 
   // Auth
   { path: 'registrarse', component: RegistrarseComponent },

@@ -1,29 +1,203 @@
-<h2>Finalizar Compra</h2>
-
-<div *ngIf="error" class="error">{{ error }}</div>
-
-<div *ngIf="carrito.length > 0">
-  <ul>
-    <li *ngFor="let item of carrito">
-      {{ item.producto.nombre }} - {{ item.cantidad }} x ${{ item.producto.precio }}
-    </li>
-  </ul>
-
-  <p>Total: ${{ total }}</p>
-
-  <form (ngSubmit)="finalizarCompra()">
-    <label>
-      Dirección:
-      <input type="text" [(ngModel)]="direccion" name="direccion" required>
-    </label>
-    <label>
-      Teléfono:
-      <input type="text" [(ngModel)]="telefono" name="telefono" required>
-    </label>
-    <button type="submit">Comprar</button>
-  </form>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">🛒 Finalizar Compra</h2>
+  
+  <div class="row">
+    <!-- Columna Izquierda: Productos -->
+    <div class="col-md-5">
+      <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">📋 Tu Pedido</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="carritoVacio()" class="alert alert-warning">
+            <i class="bi bi-cart-x"></i> No hay productos en el carrito
+          </div>
+          
+          <div *ngIf="!carritoVacio()">
+            <!-- Lista de productos -->
+            <div *ngFor="let item of obtenerProductos()" class="mb-2 pb-2 border-bottom">
+              <div class="row">
+                <div class="col-8">
+                  <strong>{{item.producto?.nombre || 'Producto'}}</strong>
+                  <div class="text-muted small">
+                    Cantidad: {{item.cantidad || 1}}
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <span class="fw-bold">
+                    ${{(((item.producto?.precio || item.precio || 0) * (item.cantidad || 1)).toFixed(2))}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Totales -->
+            <div class="mt-4 pt-3 border-top">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal:</span>
+                <span>${{subtotal.toFixed(2)}}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Envío:</span>
+                <span>${{envio.toFixed(2)}}</span>
+              </div>
+              <div class="d-flex justify-content-between mt-3 pt-3 border-top">
+                <h5 class="mb-0">Total:</h5>
+                <h4 class="mb-0 text-success">${{total.toFixed(2)}}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Columna Derecha: Formulario -->
+    <div class="col-md-7">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">👤 Tus Datos</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Nombre completo *</label>
+            <input type="text" class="form-control" 
+                   [(ngModel)]="nombre" 
+                   placeholder="Ingresa tu nombre">
+            <div *ngIf="!nombre.trim() && compraCompletada" class="text-danger small mt-1">
+              Este campo es requerido
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Correo electrónico *</label>
+              <input type="email" class="form-control" 
+                     [(ngModel)]="correo" 
+                     placeholder="ejemplo@email.com">
+              <div *ngIf="(!correo.trim() || !correo.includes('@')) && compraCompletada" class="text-danger small mt-1">
+                Correo inválido
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Teléfono *</label>
+              <input type="tel" class="form-control" 
+                     [(ngModel)]="telefono" 
+                     placeholder="11 1234-5678">
+              <div *ngIf="!telefono.trim() && compraCompletada" class="text-danger small mt-1">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold">Dirección de envío *</label>
+            <input type="text" class="form-control" 
+                   [(ngModel)]="direccion" 
+                   placeholder="Calle, número, piso, departamento">
+            <div *ngIf="!direccion.trim() && compraCompletada" class="text-danger small mt-1">
+              Este campo es requerido
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Ciudad *</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="ciudad" 
+                     placeholder="Buenos Aires">
+              <div *ngIf="!ciudad.trim() && compraCompletada" class="text-danger small mt-1">
+                Este campo es requerido
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Provincia *</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="provincia" 
+                     placeholder="Buenos Aires">
+              <div *ngIf="!provincia.trim() && compraCompletada" class="text-danger small mt-1">
+                Este campo es requerido
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Código Postal *</label>
+              <input type="text" class="form-control" 
+                     [(ngModel)]="codigoPostal" 
+                     placeholder="1428">
+              <div *ngIf="!codigoPostal.trim() && compraCompletada" class="text-danger small mt-1">
+                Este campo es requerido
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label class="form-label fw-bold">Método de pago *</label>
+            <select class="form-select" [(ngModel)]="metodoPago">
+              <option value="tarjeta">💳 Tarjeta de crédito/débito</option>
+              <option value="efectivo">💰 Efectivo</option>
+              <option value="transferencia">🏦 Transferencia bancaria</option>
+            </select>
+          </div>
+          
+          <!-- Botón de compra -->
+          <div class="d-grid">
+            <button type="button" 
+                    class="btn btn-success btn-lg py-3"
+                    (click)="finalizarCompra()"
+                    [disabled]="carritoVacio()">
+              <span *ngIf="!carritoVacio()">
+                ✅ Finalizar compra - ${{total.toFixed(2)}}
+              </span>
+              <span *ngIf="carritoVacio()">
+                🛒 Carrito vacío
+              </span>
+            </button>
+          </div>
+          
+          <!-- Mensaje de error -->
+          <div *ngIf="mensajeError && compraCompletada" class="alert alert-danger mt-3">
+            {{mensajeError}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="carrito.length === 0 && !error">
-  <p>Tu carrito está vacío.</p>
+<!-- Modal de Ticket -->
+<div *ngIf="mostrarTicket" class="modal show d-block" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">🎉 ¡Compra Exitosa!</h5>
+      </div>
+      <div class="modal-body text-center">
+        <div class="mb-4">
+          <div class="display-1 text-success">✅</div>
+          <h3 class="mt-3">Ticket #{{ticketNumero}}</h3>
+          <p class="text-muted">Guarda este número para consultas</p>
+        </div>
+        
+        <div class="card mb-3">
+          <div class="card-body">
+            <p><strong>Cliente:</strong> {{nombre}}</p>
+            <p><strong>Fecha:</strong> {{getFechaActual()}}</p>
+            <p><strong>Total pagado:</strong> <span class="text-success fs-4">${{total.toFixed(2)}}</span></p>
+            <p><strong>Método de pago:</strong> {{metodoPago === 'tarjeta' ? 'Tarjeta' : metodoPago === 'efectivo' ? 'Efectivo' : 'Transferencia'}}</p>
+          </div>
+        </div>
+        
+        <div class="alert alert-info">
+          <small>
+            <i class="bi bi-info-circle"></i>
+            Te hemos enviado los detalles de tu compra al correo: {{correo}}
+          </small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="cerrarTicket()">
+          🏠 Volver al inicio
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

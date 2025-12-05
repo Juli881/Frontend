@@ -1,0 +1,91 @@
+/* UNDER DARK THEME - HISTORIAL DE COMPRAS */
+:host {
+  display: block;
+  background: #0a0a0a;
+  min-height: 100vh;
+  color: #d0d0d0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  padding: 2.5rem 1rem;
+  margin: 0 auto;
+}
+
+/* Títulos sobrios */
+h2 {
+  font-weight: 400;
+  font-size: 2.2rem;
+  color: #f5f5f5;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.3px;
+}
+
+h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 1px;
+  background: #444;
+  margin-top: 0.8rem;
+}
+
+.text-muted {
+  color: #777;
+  font-weight: 300;
+  font-size: 0.95rem;
+}
+
+/* Cartas - Gris oscuro */
+.card {
+  background: #121212;
+  border: 1px solid #222;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.card:hover {
+  border-color: #333;
+}
+
+.card-header {
+  background: #1a1a1a;
+  border-bottom: 1px solid #222;
+  padding: 1.2rem 1.5rem;
+  color: #e0e0e0;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Estadísticas - Tonalidades grises */
+.bg-primary { background: #2a2a2a !important; color: #d0d0d0; }
+.bg-success { background: #1a2a1a !important; color: #b0d0b0; }
+.bg-warning { background: #2a2a1a !important; color: #d0d0b0; }
+.bg-info { background: #1a2a2a !important; color: #b0d0d0; }
+
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #f0f0f0;
+  margin-bottom: 0.3rem;
+}
+
+/* Botones - Sobrios */
+.btn {
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s ease;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #ccc;
+}

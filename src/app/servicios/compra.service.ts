@@ -1,34 +1,45 @@
-// CompraService.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Producto } from '../model/producto.model';
+import { Compra, HistorialComprasResponse } from '../model/compra.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompraService {
+  private apiUrl = 'http://localhost/api_proyecto/public';
 
-  private apiUrl = 'http://localhost:3000/compras';
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient) {}
-
-  // 🚨 Debe ser público para que lo use CompraComponent
-  crearCompra(data: {
-    usuarioId: number;
-    productos: { producto: Producto; cantidad: number }[];
-    total: number;
-    direccion: string;
-    metodoPago: string;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, data);
+  // Finalizar compra (ya existe)
+  finalizarCompra(datosCompra: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/compras/finalizar`, datosCompra);
   }
 
-  obtenerComprasUsuario(usuarioId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/usuario/${usuarioId}`);
+  // Obtener historial de compras (NUEVO)
+  obtenerHistorialCompras(): Observable<HistorialComprasResponse> {
+    return this.http.get<HistorialComprasResponse>(`${this.apiUrl}/compras`);
   }
 
-  obtenerCompraPorId(compraId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${compraId}`);
+  // Obtener detalles de una compra específica (NUEVO)
+  obtenerDetalleCompra(idCompra: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/compras/${idCompra}`);
+  }
+
+  // Cancelar una compra (NUEVO)
+  cancelarCompra(idCompra: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/compras/${idCompra}/cancelar`, {});
+  }
+
+  // Descargar ticket PDF (NUEVO)
+  descargarTicket(idCompra: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/tickets/${idCompra}`, {
+      responseType: 'blob'  // Importante para archivos
+    });
+  }
+
+  // Generar estadísticas (NUEVO)
+  obtenerEstadisticas(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/compras/estadisticas`);
   }
 }

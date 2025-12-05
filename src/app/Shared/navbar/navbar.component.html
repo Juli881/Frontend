@@ -12,6 +12,8 @@
       <li><a class="dropdown-item" routerLink="/contacto">Contacto</a></li>
       <li><a class="dropdown-item" routerLink="/favoritos">Favoritos</a></li>
       <li><a class="dropdown-item" routerLink="/carrito">Carrito</a></li>
+      <!-- NUEVO: Historial de compras -->
+      <li><a class="dropdown-item" routerLink="/mis-compras">Mis Compras</a></li>
     </ul>
   </div>
 
@@ -24,30 +26,21 @@
   <ul class="navbar-nav ms-auto d-flex flex-row align-items-center list-unstyled gap-3">
 
     <li><a class="nav-link" routerLink="/">Inicio</a></li>
-
-    <!-- ⬅️ AHORA SÍ: dropdown envuelto en <li> -->
-    <li class="dropdown me-3">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="cuentaDropdown"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        Cuenta
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="cuentaDropdown">
-        <li><a class="dropdown-item" routerLink="/registrarse">Creá tu cuenta</a></li>
-        <li><a class="dropdown-item" routerLink="/iniciar-sesion">Iniciar sesión</a></li>
-      </ul>
-    </li>
-
+    
+    <!-- MIS COMPRAS - NUEVO (pero mantiene todo lo demás) -->
+    <li><a class="nav-link" routerLink="/mis-compras">Mis Compras</a></li>
+    
     <li><a class="nav-link" routerLink="/productos">Productos</a></li>
     <li><a class="nav-link" routerLink="/contacto">Contacto</a></li>
     <li><a class="nav-link" routerLink="/favoritos">Favoritos</a></li>
 
-    <!-- Modo oscuro -->
+    <!-- Modo oscuro (LO DEJAMOS IGUAL) -->
     <li>
       <label for="toggle" id="label_toggle"><i class="fa-solid fa-moon"></i></label>
       <input type="checkbox" id="toggle" (click)="cambiarFondo()">
     </li>
 
-    <!-- Carrito -->
+    <!-- Carrito (LO DEJAMOS IGUAL) -->
     <li class="carrito-link">
       <a class="nav-link" [routerLink]="['/carrito']">
         <i class="bi bi-cart"></i>
@@ -55,7 +48,28 @@
       </a>
     </li>
 
-    <!-- Usuario -->
+    <!-- DROPDOWN DE CUENTA (LO DEJAMOS COMPLETO) -->
+    <li class="dropdown me-3">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="cuentaDropdown"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        Cuenta
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="cuentaDropdown">
+        <!-- REGISTRARSE (lo mantengo) -->
+        <li><a class="dropdown-item" routerLink="/registrarse">Creá tu cuenta</a></li>
+        <!-- INICIAR SESIÓN (lo mantengo) -->
+        <li><a class="dropdown-item" routerLink="/iniciar-sesion">Iniciar sesión</a></li>
+        <!-- Separador -->
+        <li><hr class="dropdown-divider"></li>
+        <!-- MIS COMPRAS (agrego aquí también) -->
+        <li><a class="dropdown-item" routerLink="/mis-compras">Mis Compras</a></li>
+        <!-- Podrías agregar más opciones después -->
+        <!-- <li><a class="dropdown-item" routerLink="/perfil">Mi Perfil</a></li> -->
+        <!-- <li><a class="dropdown-item" (click)="cerrarSesion()">Cerrar Sesión</a></li> -->
+      </ul>
+    </li>
+
+    <!-- Usuario (LO DEJAMOS IGUAL) -->
     <li>
       <app-usuario [nombre]="nombreUsuario"></app-usuario>
     </li>
